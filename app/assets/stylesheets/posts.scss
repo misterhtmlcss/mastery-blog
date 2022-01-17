@@ -1,0 +1,16 @@
+// Place all the styles related to the posts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+main {
+  display: flex;
+  justify-content: center;
+  max-width: 32em;
+  margin: 0 auto;
+}
+
+
+
+#post_title {
+  width: 100%;
+}
