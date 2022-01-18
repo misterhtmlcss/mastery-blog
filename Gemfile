@@ -29,9 +29,11 @@ gem 'jbuilder', '~> 2.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+
 group :test do
   # Capybara helps you test web applications by simulating how a real user would interact with your app
   gem 'capybara', '~> 3.36.0'
+  gem 'simplecov', require: false
 end
 
 group :development, :test do
