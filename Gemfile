@@ -18,9 +18,6 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 
-# Capybara helps you test web applications by simulating how a real user would interact with your app
-gem 'capybara', '~> 3.36.0'
-
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -31,6 +28,11 @@ gem 'capybara', '~> 3.36.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+
+group :test do
+  # Capybara helps you test web applications by simulating how a real user would interact with your app
+  gem 'capybara', '~> 3.36.0'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
