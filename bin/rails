@@ -5,7 +5,7 @@ require_relative "../config/boot"
 require "rails/commands"
 
 
-# # SimpleCov
+# SimpleCov
 # if ENV['RAILS_ENV'] == 'test'
 #   require 'simplecov'
 #   SimpleCov.start 'rails'
