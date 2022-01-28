@@ -29,7 +29,7 @@ jobs:
         uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e # v1.92
         with:
           bundler-cache: true
-
+      # Setup Test DB on CI
       - name: Setup Test Database
         env:
           RAILS_ENV: test
@@ -42,3 +42,6 @@ jobs:
       # Add or replace test runners here
       - name: Run tests
         run: bin/rake
+      # Update my coverage report
+      - name: Codecov
+        uses: codecov/codecov-action@v2.1.0
