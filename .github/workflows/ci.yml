@@ -36,9 +36,11 @@ jobs:
           PGUSER: rails
           PGPASSWORD: password
           PGHOST: localhost
-        run: |
-          bundle exec rake db:create
-          bundle exec rake db:schema:load
+        run:
+          bundle exec rails db:setup
+        # bundle exec rake db:create
+        # bundle exec rake db:schema:load
+
       # Add or replace test runners here
       - name: Run tests
         run: bin/rake
