@@ -1,0 +1,47 @@
+name: Ruby
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    name: RSpec Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Add or replace dependency steps here
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e # v1.92
+        with:
+          bundler-cache: true
+      # Setup Test DB on CI
+      - name: Setup Test Database
+        env:
+          RAILS_ENV: test
+          PGUSER: rails
+          PGPASSWORD: password
+          PGHOST: localhost
+        run:
+          bundle exec rails db:setup
+
+      # Add or replace test runners here
+      - name: Run tests
+        run: bin/rake
+      # Update my coverage report
+      - name: Codecov
+        uses: codecov/codecov-action@v2.1.0
