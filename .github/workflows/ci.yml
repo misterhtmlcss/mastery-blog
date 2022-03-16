@@ -43,7 +43,9 @@ jobs:
       - name: Run tests
         run: bin/rake
       # Update my coverage report
-      - name: Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/reports/
+          verbose: true
