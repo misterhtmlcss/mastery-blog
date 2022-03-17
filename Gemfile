@@ -36,6 +36,7 @@ group :development, :test do
     # Capybara helps you test web applications by simulating how a real user would interact with your app
   gem 'capybara', '~> 3.36.0'
   gem 'simplecov', require: false
+  gem 'codecov', require: false
 end
 
 group :development do
