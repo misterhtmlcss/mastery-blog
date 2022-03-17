@@ -1,52 +1,59 @@
-name: Ruby
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+name: CI
+on: [push]
 jobs:
-  test:
-    name: RSpec Tests
+  tests:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
-        ports:
-          - "5432:5432"
+        image: postgres:13.5
         env:
-          POSTGRES_USER: rails
-          POSTGRES_PASSWORD: password
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
-      # Add or replace dependency steps here
+
       - name: Setup Ruby and install gems
-        uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e # v1.92
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      # Setup Test DB on CI
-      - name: Setup Test Database
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Setup Yarn
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
+
+      - name: Setup test database
         env:
           RAILS_ENV: test
-          PGUSER: rails
-          PGPASSWORD: password
           PGHOST: localhost
-        run:
-          bundle exec rails db:create db:migrate
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          bin/rails db:create db:migrate
 
-      # Add or replace test runners here
+      - name: Compile code
+        run: bin/rails webpacker:compile
+        env:
+          RAILS_ENV: test
+
       - name: Run tests
-        run: bin/rake
-      # Update my coverage report
-      - name: Upload coverage to Codecov
-        # uses: actions/checkout@master
+        env:
+          RAILS_ENV: test
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: bin/rails spec
+
+      - name: Codecov
+        env:
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
         uses: codecov/codecov-action@v2.1.0
-        # with:
-        #   token: ${{ secrets.CODECOV_TOKEN }}
-        #   directory: ./coverage/reports/
-        #   verbose: true
