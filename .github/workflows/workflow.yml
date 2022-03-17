@@ -37,7 +37,7 @@ jobs:
           PGPASSWORD: password
           PGHOST: localhost
         run:
-          bundle exec rails db:setup
+          bundle exec rails db:create db:migrate
 
       # Add or replace test runners here
       - name: Run tests
