@@ -1,29 +1,29 @@
 class ArticlesController < ApplicationController
   def index
-    render html:"default"
+    @articles = Article.all
+  end
+
+  def show
+    render html: "show"
   end
 
   def new
     render html:"new"
   end
 
-  def edit
-    render html:"edit"
-  end
-
-  def show
-    render html:"show"
-  end
-
   def create
     render html:"create"
   end
 
-  def update
-    render html:"update"
+  def edit
+    render html:"edit"
   end
 
   def update
+    render html: "update"
+  end
+
+  def destroy
     render html:"destroy"
   end
 end
