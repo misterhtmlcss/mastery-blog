@@ -5,20 +5,24 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+Stack:
+* Ruby version: ruby 3.0.3
+* Rails version: rails 6.1.4.4 
+* Homebrew
+* Yarn 
+* PostgreSQL
 
-* System dependencies
+* Setup:
+- `bundle install`
+- `yarn install`
 
-* Configuration
+* Database creation: 
+- `brew install postgresql; brew services start postgresql`
+- `rake db:create && rake db:schema:load`
 
-* Database creation
+* ENV Setup:
+- 
 
-* Database initialization
+* Deployment instructions:
+- 
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
