@@ -1,5 +1,4 @@
-require 'rails_helper'
-# require 'faker'
+require "rails_helper"
 
 RSpec.describe Article, type: :model do
   context "validation tests" do
