@@ -1,10 +1,16 @@
 require 'rails_helper'
+# require 'faker'
 
 RSpec.describe Article, type: :model do
-  it 'returns a title and body of an article' do 
-    article = build(:article)
-    expect(article.title).to eq 'test title'
-    expect(article.body).to eq 'testing my body'
+  context "validation tests" do
+    let(:article) { build(:article) }
+    it 'returns a title and body of an article' do 
+      article.title = nil
+      expect(article.save).to eq(false)
+      # expect(article.title).to eq 'test title'
+      # expect(article.body).to eq 'testing my body'
+    end
+    
   end
 
 end
