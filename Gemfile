@@ -38,6 +38,7 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'codecov', require: false
   gem 'factory_bot_rails'
+  gem 'faker'
   
 end
 
