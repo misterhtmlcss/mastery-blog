@@ -3,7 +3,14 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+Project:
+Create a multi-media site that is focused primariy on my own personal content from written to videos.
+
+Summary of features:
+- Content status of archive, draft, published content
+- Content that is public, member-only or private
+- Comments on content or profile
+- Likes on content
 
 Stack:
 * Ruby version: ruby 3.0.3
