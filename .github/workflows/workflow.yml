@@ -2,17 +2,22 @@ name: CI
 on: [push]
 jobs:
   tests:
+    name: RSpec Tests
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:13.5
+        image: postgres:14
+        ports: ["5432:5432"]
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -31,7 +36,7 @@ jobs:
         with:
           cmd: install
 
-      - name: Setup test database
+      - name: Setup Test Database
         env:
           RAILS_ENV: test
           PGHOST: localhost
@@ -51,13 +56,11 @@ jobs:
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
-        run: bin/rails spec
+        run:
+          bundle exec rails db:setup
 
+      - name: Run tests
+        run: bin/rake
+        
       - name: Codecov
         uses: codecov/codecov-action@v2.1.0
-        with:
-          name: codecov-umbrella # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-        # env:
-          # CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
