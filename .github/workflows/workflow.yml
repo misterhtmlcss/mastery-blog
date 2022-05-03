@@ -1,18 +1,17 @@
 name: intial-setup-and-test-workflow
 on: push
-jobs:
-  ci-workflow:
-    name: Ubuntu + DB setup
-    runs-on: ubuntu-latest
 
+jobs:
+  tests:
+    name: RSpec Tests
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:14
+        ports: ["5432:5432"]
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        ports: ["5432:5432"]
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -30,8 +29,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+      
+      - name: Setup Yarn
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install
 
-      - name: Setup test database
+      - name: Setup database
         env:
           RAILS_ENV: test
           PGHOST: localhost
@@ -39,21 +43,35 @@ jobs:
           PGPASSWORD: postgres
         run: bin/rails db:create db:migrate
 
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.0.0
+      - name: Compile code
+        run: bin/rails webpacker:compile
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_ID }}
+          RAILS_ENV: test
+      
+      - name: Run tests
+        env:
           RAILS_ENV: test
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
-        with: 
-          coverageCommand: bin/rspec
-          coverageLocations: coverage/coverage.json:simplecov
-          debug: true
+        run:
+          bundle exec rails db:setup
 
-      - name: Send coverage report to codecov
-        uses: codecov/codecov-action@v2
-        with:
-          directory: ./coverage/
-          verbose: true
+      # - name: Test & publish code coverage
+      #   uses: paambaati/codeclimate-action@v3.0.0
+      #   env:
+      #     CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_ID }}
+      #     RAILS_ENV: test
+      #     PGHOST: localhost
+      #     PGUSER: postgres
+      #     PGPASSWORD: postgres
+      #   with: 
+      #     coverageCommand: bin/rspec
+      #     coverageLocations: coverage/coverage.json:simplecov
+      #     debug: true
+
+      # - name: Send coverage report to codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     directory: ./coverage/
+      #     verbose: true
