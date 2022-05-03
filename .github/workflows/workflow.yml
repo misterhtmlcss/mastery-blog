@@ -42,7 +42,8 @@ jobs:
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
-        run: bin/rails db:prepare
+        run: bin/rails db:create db:schema:load
+        # run: bin/rails db:prepare
           # bin/rails db:create db:migrate
 
       - name: Compile code
