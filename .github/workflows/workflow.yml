@@ -2,11 +2,12 @@ name: intial-setup-and-test-workflow
 on: push
 jobs:
   ci-workflow:
+    name: Ubuntu + DB setup
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:13.5
+        image: postgres:14
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -29,12 +30,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'npm'
-
-      - name: Compile assets
-        env:
-          RAILS_ENV: test
-        run: bin/rails test:prepare
 
       - name: Setup test database
         env:
@@ -42,7 +37,7 @@ jobs:
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
-        run: bin/rails db:test:prepare
+        run: bin/rails db:create db:migrate
 
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.0.0
