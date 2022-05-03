@@ -11,7 +11,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-        options: >-
+        options:
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
@@ -23,8 +23,6 @@ jobs:
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -36,20 +34,19 @@ jobs:
         with:
           cmd: install
 
-      - name: Setup Test Database
+      - name: Setup Database
         env:
           RAILS_ENV: test
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
         run: 
-          bin/rails db:setup
-          # bin/rails db:create db:migrate
+          bin/rails db:create db:migrate
 
       - name: Compile code
-        run: bin/rails webpacker:compile
         env:
           RAILS_ENV: test
+        run: bin/rails webpacker:compile
 
       # - name: Run tests
       #   env:
@@ -60,8 +57,8 @@ jobs:
       #   run:
       #     bundle exec rails db:setup
 
-      - name: Run tests
-        run: rspec
+      - name: Run Rspect tests
+        run: bundle exec rake
         
       - name: Codecov
         uses: codecov/codecov-action@v2.1.0
