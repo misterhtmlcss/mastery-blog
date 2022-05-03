@@ -1,8 +1,3 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
 Project:
 Create a multi-media site that is focused primariy on my own personal content from written to videos.
 
