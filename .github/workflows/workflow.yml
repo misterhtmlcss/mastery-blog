@@ -63,7 +63,7 @@ jobs:
           bundle exec rails db:setup
 
       - name: Run tests
-        run: bundle exec rake
+        run: bundle exec rspec
         
       - name: Codecov
         uses: codecov/codecov-action@v2.1.0
