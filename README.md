@@ -1,7 +1,4 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![Maintainability](https://api.codeclimate.com/v1/badges/b387c316517843edbc95/maintainability)](https://codeclimate.com/github/misterhtmlcss/mastery-blog/maintainability)
 
 Project:
 Create a multi-media site that is focused primariy on my own personal content from written to videos.
