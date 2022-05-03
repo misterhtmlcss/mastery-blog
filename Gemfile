@@ -37,8 +37,9 @@ group :development, :test do
   gem 'capybara', '~> 3.36.0'
   gem 'simplecov', require: false
   gem 'codecov', require: false
+
   gem 'factory_bot_rails'
-  
+  gem 'faker'
 end
 
 group :development do
