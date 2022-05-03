@@ -8,6 +8,7 @@ jobs:
         image: postgres:14
         ports: ["5432:5432"]
         env:
+          POSTGRES_DB: blog_2_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -15,15 +16,18 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/blog_2_test"
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup Ruby and install gems
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@8f312efe1262fb463d906e9bf040319394c18d3e
         with:
-          bundler-cache: true
+          bundler-cache: false
           
       - name: Install dependencies
         run: bundle install
@@ -38,29 +42,13 @@ jobs:
         with:
           cmd: install
 
-      - name: Setup Test Database
-        env:
-          RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: postgres
-        run: bin/rails db:create db:migrate
-        # bin/rails db:create db:schema:load
-        # run: bin/rails db:prepare
+      - name: Setup Database
+        run: bin/rails db:migrate
 
       - name: Compile code
+        env:
+          RAILS_ENV: test
         run: bin/rails webpacker:compile
-        env:
-          RAILS_ENV: test
-
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: postgres
-        run:
-          bundle exec rails db:setup
 
       - name: Run tests
         run: bundle exec rake
