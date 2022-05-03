@@ -1,3 +1,7 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/b387c316517843edbc95/maintainability)](https://codeclimate.com/github/misterhtmlcss/mastery-blog/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/b387c316517843edbc95/test_coverage)](https://codeclimate.com/github/misterhtmlcss/mastery-blog/test_coverage)
+
 Project:
 Create a multi-media site that is focused primariy on my own personal content from written to videos.
 
