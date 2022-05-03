@@ -1,16 +1,17 @@
-name: CI
-on: [push]
+name: intial-setup-and-test-workflow
+on: push
 jobs:
-  tests:
-    name: RSpec Tests
+  ci-workflow:
     runs-on: ubuntu-latest
+
     services:
       postgres:
-        image: postgres:14
-        ports: ["5432:5432"]
+        image: postgres:13.5
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -28,37 +29,36 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+          cache: 'npm'
 
-      - name: Setup Yarn
-        uses: borales/actions-yarn@v2.3.0
-        with:
-          cmd: install
+      - name: Compile assets
+        env:
+          RAILS_ENV: test
+        run: bin/rails test:prepare
 
-      - name: Setup Test Database
+      - name: Setup test database
         env:
           RAILS_ENV: test
           PGHOST: localhost
           PGUSER: postgres
           PGPASSWORD: postgres
-        run: 
-          bin/rails db:create db:migrate
+        run: bin/rails db:test:prepare
 
-      - name: Compile code
-        run: bin/rails webpacker:compile
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_ID }}
           RAILS_ENV: test
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        with: 
+          coverageCommand: bin/rspec
+          coverageLocations: coverage/coverage.json:simplecov
+          debug: true
 
-      # - name: Run tests
-      #   env:
-      #     RAILS_ENV: test
-      #     PGHOST: localhost
-      #     PGUSER: postgres
-      #     PGPASSWORD: postgres
-      #   run:
-      #     bundle exec rails db:setup
-
-      - name: Run Rspect tests
-        run: bundle exec rake
-        
-      - name: Codecov
-        uses: codecov/codecov-action@v2.1.0
+      - name: Send coverage report to codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage/
+          verbose: true
