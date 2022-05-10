@@ -2,13 +2,13 @@ name: CI
 on: [push]
 jobs:
   tests:
-    name: RSpec Tests
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:14
         ports: ["5432:5432"]
         env:
+          POSTGRES_DB: blog_2_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -16,7 +16,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/blog_2_test"
+      CI: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,7 +27,10 @@ jobs:
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          bundler-cache: false
+          
+      - name: Install dependencies
+        run: bundle install
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -36,31 +42,16 @@ jobs:
         with:
           cmd: install
 
-      - name: Setup Test Database
-        env:
-          RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: postgres
-        run: |
-          bin/rails db:create db:migrate
+      - name: Setup Database
+        run: bin/rails db:migrate
 
       - name: Compile code
+        env:
+          RAILS_ENV: test
         run: bin/rails webpacker:compile
-        env:
-          RAILS_ENV: test
 
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: postgres
-        run:
-          bundle exec rails db:setup
-
-      - name: Run tests
-        run: bin/rake
+        run: bundle exec rake
         
       - name: Codecov
         uses: codecov/codecov-action@v2.1.0
