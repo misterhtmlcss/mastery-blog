@@ -3,7 +3,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b387c316517843edbc95/test_coverage)](https://codeclimate.com/github/misterhtmlcss/mastery-blog/test_coverage)
 
 Project:
-Create a multi-media site that is focused primariy on my own personal content from written to videos.
+Create a site that is focused primariy on my own personal content from written to videos.
 
 Summary of features:
 - Content status of archive, draft, published content
@@ -12,15 +12,19 @@ Summary of features:
 - Likes on content
 
 Stack:
-* Ruby version: ruby 3.0.3
-* Rails version: rails 6.1.4.4 
-* Homebrew
-* Yarn 
-* PostgreSQL
+* Rails: 
+    * rails 6.1.4.4 
+    * ruby 3.0.3
+    * ERB files
+* Database
+    * PostgreSQL
+* Testing
+    * Rspec
+    * Capybara
+    
 
 * Setup:
 - `bundle install`
-- `yarn install`
 
 * Database creation: 
 - `brew install postgresql; brew services start postgresql`
