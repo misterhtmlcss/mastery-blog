@@ -23,35 +23,39 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: false
-          
-      - name: Install dependencies
-        run: bundle install
-
+          ruby-version: 3.0.4
+          bundler-cache: true   
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-
       - name: Setup Yarn
         uses: borales/actions-yarn@v2.3.0
         with:
           cmd: install
-
-      - name: Setup Database
-        run: bin/rails db:migrate
-
       - name: Compile code
-        env:
-          RAILS_ENV: test
         run: bin/rails webpacker:compile
-
+      - name: Setup Test Database
+        env:
+            RAILS_ENV: test 
+            POSTGRES_DB: blog_2_test
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        run: bin/rails db:migrate
       - name: Run tests
         run: bundle exec rake
-        
-      - name: Codecov
+      - name: Upload Coverage Reports
         uses: codecov/codecov-action@v2.1.0
+        with:
+          fail_ci_if_error: true
+      
+      # - name: Code Climate Coverage
+        # uses: paambaati/codeclimate-action@v3.0.0
+        # env:
+          # CC_TEST_REPORTER_ID: 
+        # with:
+          # coverageLocations: ${{github.workspace}}/coverage/coverage.xml:cobertura
+
